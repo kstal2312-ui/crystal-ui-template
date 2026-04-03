@@ -96,6 +96,8 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
+    const intervalId = setInterval(fetchUsers, 3000); // refresh every 3 seconds
+    return () => clearInterval(intervalId);
   }, []);
 
   async function fetchUsers() {
