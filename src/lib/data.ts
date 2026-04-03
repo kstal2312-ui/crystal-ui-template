@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { v4 as uuidv4 } from "uuid";
 import type {
   User,
@@ -14,7 +15,7 @@ import type {
   Session,
 } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = path.join(os.tmpdir(), "crystal-ui-data");
 
 function ensureDataDir() {
   try {
