@@ -199,13 +199,12 @@ export default function AdminLayout({
       )}
 
       <aside
-        className={`fixed top-0 ${isAr ? "right-0" : "left-0"} h-full w-72 bg-gray-900 z-40 transform transition-transform duration-300 lg:translate-x-0 ${
-          sidebarOpen
+        className={`fixed top-0 ${isAr ? "right-0" : "left-0"} h-full w-72 bg-gray-900 z-40 transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen
             ? "translate-x-0"
             : isAr
               ? "translate-x-full"
               : "-translate-x-full"
-        } lg:static lg:z-auto`}
+          } lg:static lg:z-auto`}
       >
         <div className="h-full flex flex-col">
           <div className="p-6 border-b border-gray-800">
@@ -252,11 +251,10 @@ export default function AdminLayout({
                     <Link
                       href={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                        isActive
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive
                           ? "bg-indigo-600 text-white"
                           : "text-gray-400 hover:text-white hover:bg-gray-800"
-                      }`}
+                        }`}
                     >
                       <item.icon />
                       <span>{item.label}</span>

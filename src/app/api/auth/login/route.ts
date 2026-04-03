@@ -15,20 +15,6 @@ export async function POST(request: Request) {
 
     const cleanedPhone = phone.replace(/[\s\-\(\)]/g, "");
 
-    const settings = getSettings();
-    if (cleanedPhone === settings.adminPhone && password === settings.adminPassword) {
-      const token = createSession("admin", true);
-      const response = NextResponse.json({ success: true, isAdmin: true });
-      response.cookies.set("session", token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60,
-        path: "/",
-      });
-      return response;
-    }
-
     const user = getUserByPhone(cleanedPhone);
     if (!user || user.password !== password) {
       return NextResponse.json(

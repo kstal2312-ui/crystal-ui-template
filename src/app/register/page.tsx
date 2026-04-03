@@ -69,7 +69,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "ar">("en");
   const t = translations[lang];
-  
+
   // Initialize form data from localStorage
   const initialFormData = useMemo(() => {
     const savedData = localStorage.getItem("registrationDraft");
@@ -97,7 +97,7 @@ export default function RegisterPage() {
       invitationCode: "",
     };
   }, []);
-  
+
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -130,7 +130,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
           countryCode: formData.countryCode,
