@@ -99,6 +99,7 @@ export interface Notification {
   id: string;
   type: "withdrawal" | "reward" | "prize" | "welcome" | "info";
   message: string;
+  messageAr: string;
   userName: string;
   amount: number;
   createdAt: string;

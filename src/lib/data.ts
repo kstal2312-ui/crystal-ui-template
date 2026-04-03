@@ -336,6 +336,7 @@ export function createNotification(data: Omit<Notification, "id" | "createdAt">)
   const notifications = getNotifications();
   const notification: Notification = {
     ...data,
+    messageAr: data.messageAr || data.message,
     id: uuidv4(),
     createdAt: new Date().toISOString(),
   };

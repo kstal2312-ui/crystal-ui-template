@@ -38,6 +38,7 @@ export async function PUT(request: Request) {
       createNotification({
         type: "reward",
         message: `${referrer.name || referrer.phone} received a $${referral.reward} referral reward`,
+        messageAr: `${referrer.name || referrer.phone} تلقى مكافأة إحالة بقيمة $${referral.reward}`,
         userName: referrer.name || referrer.phone,
         amount: referral.reward,
       });
