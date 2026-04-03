@@ -109,6 +109,7 @@ export interface SiteSettings {
   siteName: string;
   logo: string;
   welcomeMessage: string;
+  adminMessage: string;
   adminPhone: string;
   adminPassword: string;
   commissionRates: number[];

@@ -132,6 +132,11 @@ function StatCard({
 export default function DashboardPage() {
   const [user, setUser] = useState<UserData | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [settings, setSettings] = useState({
+    siteName: "Crystal One",
+    welcomeMessage: "",
+    adminMessage: "",
+  });
   const [loading, setLoading] = useState(true);
   const [lang, setLang] = useState<"en" | "ar">("en");
 
@@ -150,11 +155,14 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
     async function fetchData() {
       try {
-        const [meRes, tasksRes] = await Promise.all([
+        const [meRes, tasksRes, settingsRes] = await Promise.all([
           fetch("/api/auth/me"),
           fetch("/api/tasks"),
+          fetch("/api/settings"),
         ]);
 
         if (meRes.ok) {
@@ -166,12 +174,27 @@ export default function DashboardPage() {
           const tasksData = await tasksRes.json();
           setTasks(tasksData.tasks || []);
         }
+
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          setSettings({
+            siteName: settingsData.siteName || "Crystal One",
+            welcomeMessage: settingsData.welcomeMessage || "",
+            adminMessage: settingsData.adminMessage || "",
+          });
+        }
       } catch {
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
+    intervalId = setInterval(fetchData, 3000); // Poll settings and data every 3 seconds for immediate admin updates
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   const recentTasks = tasks.slice(0, 3);
@@ -202,6 +225,11 @@ export default function DashboardPage() {
             <p className="text-sm text-[var(--color-text-muted)] mt-1">
               {user.phone}
             </p>
+          )}
+          {(settings.welcomeMessage || settings.adminMessage) && (
+            <div className="mt-3 rounded-xl bg-blue-50 border border-blue-100 p-3 text-sm text-blue-700">
+              {settings.adminMessage ? settings.adminMessage : settings.welcomeMessage}
+            </div>
           )}
         </div>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100">

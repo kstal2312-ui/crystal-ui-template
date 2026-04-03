@@ -311,11 +311,10 @@ export default function AdminUsersPage() {
                     </td>
                     <td className={`${isAr ? "text-right" : "text-left"} px-4 py-3 whitespace-nowrap`}>
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                          user.isActive
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${user.isActive
                             ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                             : "bg-red-50 text-red-700 border border-red-200"
-                        }`}
+                          }`}
                       >
                         {user.isActive ? tr.active : tr.inactive}
                       </span>
@@ -349,11 +348,10 @@ export default function AdminUsersPage() {
                             <button
                               onClick={() => handleToggleActive(user)}
                               disabled={saving === user.id}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer ${
-                                user.isActive
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer ${user.isActive
                                   ? "text-amber-600 bg-amber-50 hover:bg-amber-100"
                                   : "text-emerald-600 bg-emerald-50 hover:bg-emerald-100"
-                              }`}
+                                }`}
                             >
                               {user.isActive ? tr.deactivate : tr.activate}
                             </button>

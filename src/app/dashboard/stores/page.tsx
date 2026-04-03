@@ -92,6 +92,7 @@ const translations = {
 export default function StoresPage() {
   const [stores, setStores] = useState<Store[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [settings, setSettings] = useState({ siteName: "Crystal One", welcomeMessage: "", adminMessage: "" });
   const [loading, setLoading] = useState(true);
   const [subscribing, setSubscribing] = useState<number | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -113,22 +114,40 @@ export default function StoresPage() {
   }, []);
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
     async function fetchData() {
       try {
-        const [storesRes, userRes] = await Promise.all([
+        const [storesRes, userRes, settingsRes] = await Promise.all([
           fetch("/api/stores"),
           fetch("/api/auth/me"),
+          fetch("/api/settings"),
         ]);
         const storesData = await storesRes.json();
         const userData = await userRes.json();
         setStores(storesData.stores || []);
         setUser(userData.user);
+
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          setSettings({
+            siteName: settingsData.siteName || "Crystal One",
+            welcomeMessage: settingsData.welcomeMessage || "",
+            adminMessage: settingsData.adminMessage || "",
+          });
+        }
       } catch {
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
+    intervalId = setInterval(fetchData, 3000);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   async function handleSubscribe(store: Store) {
@@ -190,6 +209,11 @@ export default function StoresPage() {
             <p className="text-indigo-100 text-sm mt-1">
               {t.subtitle}
             </p>
+            {(settings.adminMessage || settings.welcomeMessage) && (
+              <div className="mt-3 rounded-xl bg-blue-50 border border-blue-100 p-3 text-sm text-blue-700">
+                {settings.adminMessage || settings.welcomeMessage}
+              </div>
+            )}
           </div>
 
           {user && (

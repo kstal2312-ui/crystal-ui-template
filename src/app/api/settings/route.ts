@@ -8,6 +8,7 @@ export async function GET() {
     siteName: settings.siteName,
     logo: settings.logo,
     welcomeMessage: settings.welcomeMessage,
+    adminMessage: settings.adminMessage,
     adminPhone: settings.adminPhone,
     adminPassword: settings.adminPassword,
     depositPhones: settings.depositPhones,

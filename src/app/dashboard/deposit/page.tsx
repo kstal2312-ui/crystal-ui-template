@@ -122,7 +122,7 @@ export default function DepositPage() {
           if ((settingsData.depositPhones || []).length > 0) {
             setRecipientPhone(settingsData.depositPhones[0]);
           }
-          setAdminPhoneMessage(settingsData.adminPhoneMessage || t.adminMessage);
+          setAdminPhoneMessage(settingsData.adminMessage || t.adminMessage);
         }
 
         if (depositsRes.ok) {
@@ -264,8 +264,8 @@ export default function DepositPage() {
           {message && (
             <div
               className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${message.type === "success"
-                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                  : "bg-red-50 text-red-700 border border-red-200"
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                : "bg-red-50 text-red-700 border border-red-200"
                 }`}
             >
               {message.text}

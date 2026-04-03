@@ -10,6 +10,7 @@ const t = {
     welcomeMessage: "Welcome Message",
     adminPhone: "Admin Phone",
     adminPassword: "Admin Password",
+    adminMessage: "Admin Broadcast Message",
     logoUrl: "Logo URL",
     logoPlaceholder: "/uploads/logo.png",
     uploading: "Uploading...",
@@ -38,6 +39,7 @@ const t = {
     welcomeMessage: "رسالة الترحيب",
     adminPhone: "هاتف المسؤول",
     adminPassword: "كلمة مرور المسؤول",
+    adminMessage: "رسالة عامة للمستخدمين",
     logoUrl: "رابط الشعار",
     logoPlaceholder: "/uploads/logo.png",
     uploading: "جاري الرفع...",
@@ -64,6 +66,7 @@ const t = {
 interface Settings {
   siteName: string;
   welcomeMessage: string;
+  adminMessage: string;
   adminPhone: string;
   adminPassword: string;
   logo: string;
@@ -80,6 +83,7 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Settings>({
     siteName: "",
     welcomeMessage: "",
+    adminMessage: "",
     adminPhone: "",
     adminPassword: "",
     logo: "",
@@ -103,6 +107,7 @@ export default function AdminSettingsPage() {
           setSettings({
             siteName: data.siteName || "",
             welcomeMessage: data.welcomeMessage || "",
+            adminMessage: data.adminMessage || "",
             adminPhone: data.adminPhone || "",
             adminPassword: data.adminPassword || "",
             logo: data.logo || "",
@@ -238,6 +243,19 @@ export default function AdminSettingsPage() {
             onChange={(e) => handleChange("welcomeMessage", e.target.value)}
             rows={3}
             className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            {tr.adminMessage}
+          </label>
+          <textarea
+            value={settings.adminMessage}
+            onChange={(e) => handleChange("adminMessage", e.target.value)}
+            rows={2}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+            placeholder="Enter message to show all users"
           />
         </div>
 

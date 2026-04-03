@@ -93,6 +93,7 @@ const translations = {
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserData | null>(null);
+  const [settings, setSettings] = useState({ siteName: "Crystal One", welcomeMessage: "", adminMessage: "" });
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [transfers, setTransfers] = useState<Transfers>({ accepted: 0, rejected: 0 });
   const [loading, setLoading] = useState(true);
@@ -108,13 +109,16 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
     async function fetchData() {
       try {
-        const [meRes, referralsRes, depositsRes, withdrawalsRes] = await Promise.all([
+        const [meRes, referralsRes, depositsRes, withdrawalsRes, settingsRes] = await Promise.all([
           fetch("/api/auth/me"),
           fetch("/api/referrals"),
           fetch("/api/deposits"),
           fetch("/api/withdrawals"),
+          fetch("/api/settings"),
         ]);
 
         if (meRes.ok) {
@@ -140,13 +144,28 @@ export default function ProfilePage() {
             allWithdrawals.filter((w: { status: string }) => w.status === "rejected").length;
           setTransfers({ accepted, rejected });
         }
+
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          setSettings({
+            siteName: settingsData.siteName || "Crystal One",
+            welcomeMessage: settingsData.welcomeMessage || "",
+            adminMessage: settingsData.adminMessage || "",
+          });
+        }
       } catch {
         // Handle error silently
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
+    intervalId = setInterval(fetchData, 3000);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   function handleCopy() {
@@ -190,6 +209,14 @@ export default function ProfilePage() {
           </button>
         </div>
       </div>
+
+      {(settings.adminMessage || settings.welcomeMessage) && (
+        <div className="max-w-3xl mx-auto px-4 -mt-4">
+          <div className="rounded-xl bg-blue-50 border border-blue-100 p-3 text-sm text-blue-700">
+            {settings.adminMessage || settings.welcomeMessage}
+          </div>
+        </div>
+      )}
 
       <div className="max-w-3xl mx-auto px-4 -mt-6 space-y-5">
         {/* Invitation Code Card */}

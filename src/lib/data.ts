@@ -356,6 +356,7 @@ export function getSettings(): SiteSettings {
     siteName: "Crystal One",
     logo: "",
     welcomeMessage: "Welcome to Crystal One - Your trusted shopping platform",
+    adminMessage: "Please use the latest deposit numbers listed below",
     adminPhone: "01093383059",
     adminPassword: "abdallah112021",
     commissionRates: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
