@@ -49,6 +49,7 @@ const translations = {
     errorUpload: "Image upload failed - deposit will be submitted without image",
     errorSubmit: "Failed to submit deposit",
     adminNotes: "Admin Notes",
+    adminMessage: "Important: Send payment to this number only",
   },
   ar: {
     deposit: "الإيداع",
@@ -79,6 +80,7 @@ const translations = {
     errorUpload: "فشل تحميل الصورة - سيتم تقديم الإيداع بدون صورة",
     errorSubmit: "فشل في تقديم الإيداع",
     adminNotes: "ملاحظات المسؤول",
+    adminMessage: "مهم: أرسل الدفع إلى هذا الرقم فقط",
   },
 };
 
@@ -92,6 +94,7 @@ export default function DepositPage() {
   const t = translations[lang];
 
   const [recipientPhone, setRecipientPhone] = useState("");
+  const [adminPhoneMessage, setAdminPhoneMessage] = useState("");
   const [senderPhone, setSenderPhone] = useState("");
   const [amount, setAmount] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -120,6 +123,8 @@ export default function DepositPage() {
           if ((settingsData.depositPhones || []).length > 0) {
             setRecipientPhone(settingsData.depositPhones[0]);
           }
+          // Set admin message (can be added to settings later)
+          setAdminPhoneMessage(settingsData.adminPhoneMessage || t.adminMessage);
         }
 
         if (depositsRes.ok) {
@@ -158,10 +163,6 @@ export default function DepositPage() {
     e.preventDefault();
     setMessage(null);
 
-    if (!recipientPhone) {
-      setMessage({ type: "error", text: t.errorRecipient });
-      return;
-    }
     if (!senderPhone.trim()) {
       setMessage({ type: "error", text: t.errorPhone });
       return;
@@ -269,31 +270,18 @@ export default function DepositPage() {
           )}
 
           <div className="space-y-4">
-            {/* Recipient Phone */}
+            {/* Recipient Phone (Read-Only) */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 {t.recipientPhone}
               </label>
-              {depositPhones.length > 0 ? (
-                <select
-                  value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-sm bg-white"
-                >
-                  {depositPhones.map((phone) => (
-                    <option key={phone} value={phone}>
-                      {phone}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
-                  placeholder={t.selectRecipient}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition text-sm"
-                />
+              <div className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm">
+                <p className="text-gray-800 font-medium">{recipientPhone || "Loading..."}</p>
+              </div>
+              {adminPhoneMessage && (
+                <p className="text-xs text-amber-700 mt-2 bg-amber-50 px-3 py-2 rounded-lg">
+                  📌 {adminPhoneMessage}
+                </p>
               )}
             </div>
 
