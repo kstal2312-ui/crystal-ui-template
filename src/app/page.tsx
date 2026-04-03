@@ -10,7 +10,6 @@ const translations = {
       "Join thousands of users earning daily profits through our innovative store system. Subscribe to stores, complete sales tasks, and earn commissions.",
     login: "Sign In",
     register: "Create Account",
-    adminLogin: "Admin Login",
     features: [
       { title: "10 Store Levels", desc: "From free to premium, choose your level" },
       { title: "Daily Tasks", desc: "Complete sales tasks and earn commissions" },
@@ -26,7 +25,6 @@ const translations = {
       "انضم إلى آلاف المستخدمين الذين يحققون أرباحاً يومية من خلال نظام المتاجر المبتكر. اشترك في المتاجر، وأكمل مهام البيع، واحصل على عمولاتك.",
     login: "تسجيل الدخول",
     register: "إنشاء حساب",
-    adminLogin: "دخول المسؤول",
     features: [
       { title: "10 مستويات متاجر", desc: "من المجاني إلى المميز، اختر مستواك" },
       { title: "مهام يومية", desc: "أكمل مهام البيع واحصل على العمولات" },
@@ -65,12 +63,6 @@ export default function Home() {
       className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800"
     >
       <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <a
-          href="/login"
-          className="bg-white/10 backdrop-blur-sm text-white/70 px-3 py-2 rounded-lg text-xs font-medium hover:bg-white/20 hover:text-white transition-colors border border-white/10"
-        >
-          {t.adminLogin}
-        </a>
         <button
           onClick={() => setLang(lang === "en" ? "ar" : "en")}
           className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/30 transition-colors"
