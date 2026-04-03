@@ -72,6 +72,18 @@ export default function RegisterPage() {
 
   // Initialize form data from localStorage
   const initialFormData = useMemo(() => {
+    // Check if we're in the browser environment
+    if (typeof window === 'undefined') {
+      return {
+        name: "",
+        phone: "",
+        countryCode: "+20",
+        password: "",
+        confirmPassword: "",
+        invitationCode: "",
+      };
+    }
+
     const savedData = localStorage.getItem("registrationDraft");
     if (savedData) {
       try {
@@ -107,7 +119,10 @@ export default function RegisterPage() {
 
   // Auto-save registration data to localStorage whenever form fields change
   useEffect(() => {
-    localStorage.setItem("registrationDraft", JSON.stringify(formData));
+    // Only save to localStorage in browser environment
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("registrationDraft", JSON.stringify(formData));
+    }
   }, [formData]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -149,7 +164,9 @@ export default function RegisterPage() {
       }
 
       // Clear saved registration data after successful registration
-      localStorage.removeItem("registrationDraft");
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("registrationDraft");
+      }
 
       router.push("/dashboard");
     } catch {
