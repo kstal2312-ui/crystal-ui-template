@@ -15,7 +15,6 @@ const t = {
     referrals: "Referrals",
     settings: "Settings",
     sourceCode: "Source Code",
-    downloadApp: "Download App",
     logout: "Logout",
     adminPanel: "Admin Panel",
     loading: "Loading...",
@@ -30,7 +29,6 @@ const t = {
     referrals: "الإحالات",
     settings: "الإعدادات",
     sourceCode: "الكود المصدري",
-    downloadApp: "تحميل التطبيق",
     logout: "تسجيل الخروج",
     adminPanel: "لوحة الإدارة",
     loading: "جاري التحميل...",
@@ -106,14 +104,6 @@ function CodeIcon() {
   return (
     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-    </svg>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
     </svg>
   );
 }
@@ -197,7 +187,6 @@ export default function AdminLayout({
     { href: "/admin/referrals", label: tr.referrals, icon: ReferralsIcon },
     { href: "/admin/settings", label: tr.settings, icon: SettingsIcon },
     { href: "/admin/source-code", label: tr.sourceCode, icon: CodeIcon },
-    { href: "/admin/download", label: tr.downloadApp, icon: DownloadIcon },
   ];
 
   return (
