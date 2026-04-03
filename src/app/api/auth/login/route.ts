@@ -13,8 +13,10 @@ export async function POST(request: Request) {
       );
     }
 
+    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, "");
+
     const settings = getSettings();
-    if (phone === settings.adminPhone && password === settings.adminPassword) {
+    if (cleanedPhone === settings.adminPhone && password === settings.adminPassword) {
       const token = createSession("admin", true);
       const response = NextResponse.json({ success: true, isAdmin: true });
       response.cookies.set("session", token, {
@@ -27,7 +29,7 @@ export async function POST(request: Request) {
       return response;
     }
 
-    const user = getUserByPhone(phone);
+    const user = getUserByPhone(cleanedPhone);
     if (!user || user.password !== password) {
       return NextResponse.json(
         { error: "Invalid phone number or password" },

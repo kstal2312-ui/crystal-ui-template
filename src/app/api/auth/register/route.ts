@@ -12,8 +12,14 @@ import {
 import { isValidEgyptianPhone } from "@/lib/auth";
 
 export async function POST(request: Request) {
+  let body;
   try {
-    const body = await request.json();
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  try {
     const { name, phone, countryCode, password, confirmPassword, invitationCode } = body;
 
     if (!name || !phone || !password || !confirmPassword) {
@@ -23,7 +29,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!isValidEgyptianPhone(phone)) {
+    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, "");
+
+    if (!isValidEgyptianPhone(cleanedPhone)) {
       return NextResponse.json(
         { error: "Invalid phone number. Use Egyptian, Saudi, Emirati, Kuwaiti, or Libyan numbers only" },
         { status: 400 }
@@ -44,7 +52,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (getUserByPhone(phone)) {
+    if (getUserByPhone(cleanedPhone)) {
       return NextResponse.json(
         { error: "Phone number already registered" },
         { status: 400 }
@@ -64,7 +72,7 @@ export async function POST(request: Request) {
 
     const user = createUser({
       name,
-      phone,
+      phone: cleanedPhone,
       countryCode: countryCode || "+20",
       password,
       referredBy: referrer ? referrer.id : null,

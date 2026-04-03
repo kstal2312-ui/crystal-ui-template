@@ -17,22 +17,27 @@ import type {
 const DATA_DIR = path.join(process.cwd(), "data");
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch (error) {
+    console.error("Failed to create data directory:", error);
   }
 }
 
 function readJSON<T>(filename: string, defaultValue: T): T {
   ensureDataDir();
   const filePath = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(filePath)) {
-    writeJSON(filename, defaultValue);
-    return defaultValue;
-  }
   try {
+    if (!fs.existsSync(filePath)) {
+      writeJSON(filename, defaultValue);
+      return defaultValue;
+    }
     const data = fs.readFileSync(filePath, "utf-8");
     return JSON.parse(data) as T;
-  } catch {
+  } catch (error) {
+    console.error("Failed to read JSON:", filename, error);
     return defaultValue;
   }
 }
@@ -40,7 +45,11 @@ function readJSON<T>(filename: string, defaultValue: T): T {
 function writeJSON<T>(filename: string, data: T): void {
   ensureDataDir();
   const filePath = path.join(DATA_DIR, filename);
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Failed to write JSON:", filename, error);
+  }
 }
 
 function generateInvitationCode(): string {
