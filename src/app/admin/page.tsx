@@ -333,11 +333,10 @@ export default function AdminDashboardPage() {
         <h2 className="text-lg font-bold text-gray-900 mb-4">{tr.sendNotification}</h2>
         {message && (
           <div
-            className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${
-              message.type === "success"
+            className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${message.type === "success"
                 ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                 : "bg-red-50 text-red-700 border border-red-200"
-            }`}
+              }`}
           >
             {message.text}
           </div>

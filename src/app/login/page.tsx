@@ -107,8 +107,8 @@ export default function LoginPage() {
                   <stop offset="100%" stopColor="#5b21b6" />
                 </linearGradient>
                 <filter id="glowL">
-                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                  <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
               <polygon points="60,8 20,48 28,118 60,125" fill="url(#crystalLeftL)" />
