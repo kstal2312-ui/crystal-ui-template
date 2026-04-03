@@ -64,6 +64,8 @@ const t = {
 interface Settings {
   siteName: string;
   welcomeMessage: string;
+  adminPhone: string;
+  adminPassword: string;
   logo: string;
   depositPhones: string[];
   storePrices?: number[];
@@ -205,11 +207,10 @@ export default function AdminSettingsPage() {
 
       {message && (
         <div
-          className={`rounded-xl px-4 py-3 text-sm font-medium ${
-            message.type === "success"
+          className={`rounded-xl px-4 py-3 text-sm font-medium ${message.type === "success"
               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
               : "bg-red-50 text-red-700 border border-red-200"
-          }`}
+            }`}
         >
           {message.text}
         </div>
