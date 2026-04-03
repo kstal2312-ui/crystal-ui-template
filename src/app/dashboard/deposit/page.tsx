@@ -110,12 +110,11 @@ export default function DepositPage() {
   };
 
   useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
     async function fetchData() {
       try {
-        const [settingsRes, depositsRes] = await Promise.all([
-          fetch("/api/settings"),
-          fetch("/api/deposits"),
-        ]);
+        const [settingsRes, depositsRes] = await Promise.all([fetch("/api/settings"), fetch("/api/deposits")]);
 
         if (settingsRes.ok) {
           const settingsData = await settingsRes.json();
@@ -123,7 +122,6 @@ export default function DepositPage() {
           if ((settingsData.depositPhones || []).length > 0) {
             setRecipientPhone(settingsData.depositPhones[0]);
           }
-          // Set admin message (can be added to settings later)
           setAdminPhoneMessage(settingsData.adminPhoneMessage || t.adminMessage);
         }
 
@@ -137,8 +135,14 @@ export default function DepositPage() {
         setLoading(false);
       }
     }
+
     fetchData();
-  }, []);
+    intervalId = setInterval(fetchData, 3000); // Poll every 3 seconds to apply admin settings changes quickly
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [t.adminMessage]);
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
