@@ -14,7 +14,6 @@ const translations = {
     loggingIn: "Signing in...",
     noAccount: "Don't have an account?",
     registerLink: "Create Account",
-    adminAccess: "Admin Access",
     errorDefault: "Invalid phone number or password",
     langToggle: "العربية",
   },
@@ -29,7 +28,6 @@ const translations = {
     loggingIn: "جاري تسجيل الدخول...",
     noAccount: "ليس لديك حساب؟",
     registerLink: "إنشاء حساب",
-    adminAccess: "دخول المسؤول",
     errorDefault: "رقم الهاتف أو كلمة المرور غير صحيحة",
     langToggle: "English",
   },
@@ -187,18 +185,6 @@ export default function LoginPage() {
                 {t.registerLink}
               </a>
             </p>
-            <div className="border-t border-gray-100 pt-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setPhone("01026541250");
-                  setPassword("abdallah");
-                }}
-                className="text-xs text-gray-400 hover:text-indigo-600 transition-colors"
-              >
-                {t.adminAccess}
-              </button>
-            </div>
           </div>
         </div>
       </div>
