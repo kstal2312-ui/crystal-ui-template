@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const translations = {
@@ -26,6 +26,7 @@ const translations = {
     errorDefault: "An error occurred",
     langToggle: "العربية",
     countryCode: "Country Code",
+    autoSaveMessage: "💾 Your information is automatically saved as you type",
     countries: [
       { label: "Egypt (+20)", value: "+20" },
       { label: "Saudi Arabia (+966)", value: "+966" },
@@ -55,6 +56,7 @@ const translations = {
     errorDefault: "حدث خطأ",
     langToggle: "English",
     countryCode: "رمز البلد",
+    autoSaveMessage: "💾 معلوماتك محفوظة تلقائياً أثناء الكتابة",
     countries: [
       { label: "مصر (+20)", value: "+20" },
       { label: "السعودية (+966)", value: "+966" },
@@ -75,6 +77,37 @@ export default function RegisterPage() {
   const [invitationCode, setInvitationCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Load saved registration data from localStorage on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem("registrationDraft");
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        setName(parsed.name || "");
+        setPhone(parsed.phone || "");
+        setCountryCode(parsed.countryCode || "+20");
+        setPassword(parsed.password || "");
+        setConfirmPassword(parsed.confirmPassword || "");
+        setInvitationCode(parsed.invitationCode || "");
+      } catch (e) {
+        // Ignore invalid JSON
+      }
+    }
+  }, []);
+
+  // Auto-save registration data to localStorage whenever form fields change
+  useEffect(() => {
+    const registrationData = {
+      name,
+      phone,
+      countryCode,
+      password,
+      confirmPassword,
+      invitationCode,
+    };
+    localStorage.setItem("registrationDraft", JSON.stringify(registrationData));
+  }, [name, phone, countryCode, password, confirmPassword, invitationCode]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -106,6 +139,9 @@ export default function RegisterPage() {
         setLoading(false);
         return;
       }
+
+      // Clear saved registration data after successful registration
+      localStorage.removeItem("registrationDraft");
 
       router.push("/dashboard");
     } catch {
@@ -268,6 +304,12 @@ export default function RegisterPage() {
               {loading ? t.registering : t.register}
             </button>
           </form>
+
+          <div className="mt-4 text-center">
+            <p className="text-xs text-gray-400">
+              {t.autoSaveMessage}
+            </p>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-500 text-sm">
