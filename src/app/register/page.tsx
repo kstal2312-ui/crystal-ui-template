@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 const translations = {
@@ -69,45 +69,46 @@ export default function RegisterPage() {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "ar">("en");
   const t = translations[lang];
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState("+20");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [invitationCode, setInvitationCode] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Load saved registration data from localStorage on component mount
-  useEffect(() => {
+  
+  // Initialize form data from localStorage
+  const initialFormData = useMemo(() => {
     const savedData = localStorage.getItem("registrationDraft");
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        setName(parsed.name || "");
-        setPhone(parsed.phone || "");
-        setCountryCode(parsed.countryCode || "+20");
-        setPassword(parsed.password || "");
-        setConfirmPassword(parsed.confirmPassword || "");
-        setInvitationCode(parsed.invitationCode || "");
+        return {
+          name: parsed.name || "",
+          phone: parsed.phone || "",
+          countryCode: parsed.countryCode || "+20",
+          password: parsed.password || "",
+          confirmPassword: parsed.confirmPassword || "",
+          invitationCode: parsed.invitationCode || "",
+        };
       } catch (e) {
         // Ignore invalid JSON
       }
     }
+    return {
+      name: "",
+      phone: "",
+      countryCode: "+20",
+      password: "",
+      confirmPassword: "",
+      invitationCode: "",
+    };
   }, []);
+  
+  const [formData, setFormData] = useState(initialFormData);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Extract individual values for easier access
+  const { name, phone, countryCode, password, confirmPassword, invitationCode } = formData;
 
   // Auto-save registration data to localStorage whenever form fields change
   useEffect(() => {
-    const registrationData = {
-      name,
-      phone,
-      countryCode,
-      password,
-      confirmPassword,
-      invitationCode,
-    };
-    localStorage.setItem("registrationDraft", JSON.stringify(registrationData));
-  }, [name, phone, countryCode, password, confirmPassword, invitationCode]);
+    localStorage.setItem("registrationDraft", JSON.stringify(formData));
+  }, [formData]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -129,7 +130,14 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, countryCode, password, confirmPassword, invitationCode }),
+        body: JSON.stringify({ 
+          name: formData.name,
+          phone: formData.phone,
+          countryCode: formData.countryCode,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          invitationCode: formData.invitationCode
+        }),
       });
 
       const data = await res.json();
@@ -184,8 +192,8 @@ export default function RegisterPage() {
                   <stop offset="100%" stopColor="#5b21b6" />
                 </linearGradient>
                 <filter id="glowR">
-                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                  <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
               <polygon points="60,8 20,48 28,118 60,125" fill="url(#crystalLeftR)" />
@@ -224,7 +232,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 className="input-field"
                 placeholder={t.namePlaceholder}
                 required
@@ -235,7 +243,7 @@ export default function RegisterPage() {
               <label className="label">{t.countryCode}</label>
               <select
                 value={countryCode}
-                onChange={(e) => setCountryCode(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
                 className="input-field"
               >
                 {t.countries.map((c) => (
@@ -251,7 +259,7 @@ export default function RegisterPage() {
               <input
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                 className="input-field"
                 placeholder={t.phonePlaceholder}
                 required
@@ -264,7 +272,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 className="input-field"
                 placeholder={t.passwordPlaceholder}
                 required
@@ -277,7 +285,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                 className="input-field"
                 placeholder={t.confirmPasswordPlaceholder}
                 required
@@ -290,7 +298,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 value={invitationCode}
-                onChange={(e) => setInvitationCode(e.target.value.toUpperCase())}
+                onChange={(e) => setFormData(prev => ({ ...prev, invitationCode: e.target.value.toUpperCase() }))}
                 className="input-field"
                 placeholder={t.invitationCodePlaceholder}
               />
