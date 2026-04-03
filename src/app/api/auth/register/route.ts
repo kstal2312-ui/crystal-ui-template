@@ -53,6 +53,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Allow only unique phone numbers; passwords can be reused across accounts.
     if (getUserByPhone(cleanedPhone)) {
       return NextResponse.json(
         { error: "Phone number already registered" },
