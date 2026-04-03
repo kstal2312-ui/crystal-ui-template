@@ -8,7 +8,11 @@ export async function GET() {
     siteName: settings.siteName,
     logo: settings.logo,
     welcomeMessage: settings.welcomeMessage,
+    adminPhone: settings.adminPhone,
+    adminPassword: settings.adminPassword,
     depositPhones: settings.depositPhones,
+    storePrices: settings.storePrices,
+    storeProfits: settings.storeProfits,
   });
 }
 

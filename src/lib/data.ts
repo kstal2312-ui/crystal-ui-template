@@ -356,7 +356,7 @@ export function getSettings(): SiteSettings {
     logo: "",
     welcomeMessage: "Welcome to Crystal One - Your trusted shopping platform",
     adminPhone: "01026541250",
-    adminPassword: "Abdullah 112021",
+    adminPassword: "abdallah112021",
     commissionRates: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     storePrices: [0, 80, 200, 400, 800, 1600, 3200, 6400, 12800, 25600],
     storeProfits: [2, 4, 10, 20, 40, 80, 160, 320, 640, 1280],

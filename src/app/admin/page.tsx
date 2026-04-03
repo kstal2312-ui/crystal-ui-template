@@ -18,6 +18,11 @@ const t = {
     approved: "Approved",
     rejected: "Rejected",
     reward: "Reward",
+    sendNotification: "Send Notification",
+    notificationType: "Type",
+    notificationMessage: "Message",
+    send: "Send",
+    notificationSent: "Notification sent to all users!",
   },
   ar: {
     dashboard: "لوحة التحكم",
@@ -34,6 +39,11 @@ const t = {
     approved: "موافق عليه",
     rejected: "مرفوض",
     reward: "المكافأة",
+    sendNotification: "إرسال إشعار",
+    notificationType: "النوع",
+    notificationMessage: "الرسالة",
+    send: "إرسال",
+    notificationSent: "تم إرسال الإشعار لجميع المستخدمين!",
   },
 };
 
@@ -110,6 +120,10 @@ export default function AdminDashboardPage() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notificationType, setNotificationType] = useState<"info" | "welcome">("info");
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -313,6 +327,79 @@ export default function AdminDashboardPage() {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">{tr.sendNotification}</h2>
+        {message && (
+          <div
+            className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${
+              message.type === "success"
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                : "bg-red-50 text-red-700 border border-red-200"
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setSending(true);
+            setMessage(null);
+            try {
+              const res = await fetch("/api/broadcast-notification", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: notificationType, message: notificationMessage }),
+              });
+              if (res.ok) {
+                setMessage({ type: "success", text: tr.notificationSent });
+                setNotificationMessage("");
+              } else {
+                setMessage({ type: "error", text: "Failed to send notification" });
+              }
+            } catch {
+              setMessage({ type: "error", text: "Failed to send notification" });
+            } finally {
+              setSending(false);
+            }
+          }}
+          className="space-y-4"
+        >
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              {tr.notificationType}
+            </label>
+            <select
+              value={notificationType}
+              onChange={(e) => setNotificationType(e.target.value as "info" | "welcome")}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              <option value="info">Info</option>
+              <option value="welcome">Welcome</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              {tr.notificationMessage}
+            </label>
+            <textarea
+              value={notificationMessage}
+              onChange={(e) => setNotificationMessage(e.target.value)}
+              rows={3}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+              placeholder="Enter notification message..."
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={sending || !notificationMessage.trim()}
+            className="inline-flex items-center px-4 py-2.5 text-sm font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          >
+            {sending ? "Sending..." : tr.send}
+          </button>
+        </form>
       </div>
     </div>
   );
