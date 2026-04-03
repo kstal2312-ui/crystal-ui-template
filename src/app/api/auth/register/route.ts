@@ -8,6 +8,7 @@ import {
   createSession,
   createTask,
   getProducts,
+  createNotification,
 } from "@/lib/data";
 import { isValidEgyptianPhone } from "@/lib/auth";
 
@@ -119,6 +120,19 @@ export async function POST(request: Request) {
         });
       }
       updateUser(user.id, { lastTaskTime: new Date(currentTime).toISOString() });
+    }
+
+    // Notify admin of new registration
+    try {
+      createNotification({
+        type: "info",
+        message: `New user registered: ${user.name} (${user.phone})`,
+        messageAr: `مستخدم جديد مسجل: ${user.name} (${user.phone})`,
+        userName: "System",
+        amount: 0,
+      });
+    } catch {
+      // Silently handle notification error
     }
 
     const token = createSession(user.id, false);
