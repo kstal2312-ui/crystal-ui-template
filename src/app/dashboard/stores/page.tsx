@@ -22,7 +22,6 @@ interface User {
   subscriptionAccepted: boolean;
 }
 
-const storePrices = [0, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 20480];
 const storeNames = [
   "Free Store",
   "Silver Store",
@@ -215,7 +214,7 @@ export default function StoresPage() {
       <div className="max-w-5xl mx-auto px-4 -mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {stores.map((store) => {
-            const price = storePrices[store.id - 1] ?? store.price;
+            const price = store.price;
             const isFree = store.id === 1;
             const alreadySubscribed = isSubscribedToLevel(store.id);
             const hasSub = hasLowerSubscription(store.id);
@@ -223,18 +222,16 @@ export default function StoresPage() {
             return (
               <div
                 key={store.id}
-                className={`bg-white rounded-xl shadow-sm border overflow-hidden transition hover:shadow-md ${
-                  isFree
+                className={`bg-white rounded-xl shadow-sm border overflow-hidden transition hover:shadow-md ${isFree
                     ? "border-indigo-300 ring-2 ring-indigo-100"
                     : "border-gray-100"
-                }`}
+                  }`}
               >
                 <div
-                  className={`px-4 py-2 text-center ${
-                    isFree
+                  className={`px-4 py-2 text-center ${isFree
                       ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
                       : "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700"
-                  }`}
+                    }`}
                 >
                   <span className="text-sm font-bold">
                     {t.level} {store.id}
@@ -256,9 +253,8 @@ export default function StoresPage() {
                       {t.price}:
                     </span>
                     <span
-                      className={`text-lg font-bold ${
-                        isFree ? "text-green-600" : "text-indigo-600"
-                      }`}
+                      className={`text-lg font-bold ${isFree ? "text-green-600" : "text-indigo-600"
+                        }`}
                     >
                       {isFree ? t.free : `$${price}`}
                     </span>
@@ -341,7 +337,7 @@ export default function StoresPage() {
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-gray-600">{t.price}</span>
                 <span className="font-bold text-indigo-600">
-                  ${storePrices[selectedStore.id - 1]}
+                  ${selectedStore.price}
                 </span>
               </div>
               <div className="flex justify-between items-center">
